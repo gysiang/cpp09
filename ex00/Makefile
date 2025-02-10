@@ -2,7 +2,7 @@ CC = c++
 
 CFLAGS = -Wall -Wextra -Werror -std=c++98 -I include -MMD -MP
 
-TARGET = a.out
+TARGET = btc
 
 # Define source and object directories
 SRC_DIR = src
