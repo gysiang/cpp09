@@ -6,7 +6,7 @@
 /*   By: gyong-si <gyong-si@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 11:13:43 by gyong-si          #+#    #+#             */
-/*   Updated: 2025/02/11 15:24:08 by gyong-si         ###   ########.fr       */
+/*   Updated: 2025/02/11 16:11:27 by gyong-si         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -190,6 +190,16 @@ void Bitcoin_Exchange::calculateAndPrint() const
 		std::string date = it->first;
 		double exchangeRate = it->second;
 
+		if (exchangeRate < 0)
+		{
+			std::cout << "Error: not a positive number."<< std::endl;
+			++it;
+		}
+		if (exchangeRate > 1000)
+		{
+			std::cout << "Error: too large a number. "<< std::endl;
+			++it;
+		}
 		std::map<std::string, double>::const_iterator priceIt = _priceData.lower_bound(date);
 		if (priceIt == _priceData.end() || (priceIt->first != date && priceIt != _priceData.begin()))
 		{
