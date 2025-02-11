@@ -6,7 +6,7 @@
 /*   By: gyong-si <gyong-si@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 11:12:39 by gyong-si          #+#    #+#             */
-/*   Updated: 2025/02/10 16:45:52 by gyong-si         ###   ########.fr       */
+/*   Updated: 2025/02/11 10:03:03 by gyong-si         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 #include <stdexcept>
 #include <sstream>
 #include <cstdlib>
+#include <iomanip>
 
 class Bitcoin_Exchange
 {
@@ -41,6 +42,7 @@ class Bitcoin_Exchange
 		// get the closest earlier date price
 		double getClosestPrice(const std::string &date) const;
 		std::string findPreviousDate(const std::string &date) const;
+		void printDataBase();
 
 		class BitcoinException : public std::exception
 		{
@@ -49,6 +51,7 @@ class Bitcoin_Exchange
 			public:
 				explicit BitcoinException(const std::string &msg) : _message(msg) {}
 				virtual const char* what() const throw() { return _message.c_str(); }
+				virtual ~BitcoinException() throw() {};
 		};
 
 };

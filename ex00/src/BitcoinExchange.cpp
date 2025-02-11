@@ -6,7 +6,7 @@
 /*   By: gyong-si <gyong-si@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 11:13:43 by gyong-si          #+#    #+#             */
-/*   Updated: 2025/02/10 16:46:22 by gyong-si         ###   ########.fr       */
+/*   Updated: 2025/02/11 10:03:21 by gyong-si         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,13 @@ Bitcoin_Exchange::~Bitcoin_Exchange() {};
 
 void Bitcoin_Exchange::loadDatabase(const std::string &filename)
 {
-	std::ifstream file(filename);
+	std::ifstream file(filename.c_str());
 	if (!file.is_open())
 	{
 		throw BitcoinException("Error: Could not open datafile file.");
 	}
 	std::string line;
+	std::getline(file, line);
 	while (std::getline(file, line))
 	{
 		std::stringstream ss(line);
@@ -93,7 +94,16 @@ double Bitcoin_Exchange::isValidValue(const std::string &value) const
 	return (p);
 }
 
-std::string Bitcoin_Exchange::findPreviousDate(const std::string &date) const
+void Bitcoin_Exchange::printDataBase()
 {
+	std::cout << "date | value" << std::endl;
+
+	std::map<std::string, double>::const_iterator it = _priceData.begin();
+	std::map<std::string, double>::const_iterator it_end = _priceData.end();
+	while (it != it_end)
+	{
+		std::cout << "Date: " << it->first << " | Price: " << std::fixed << std::setprecision(2) << it->second << std::endl;
+		++it;
+	}
 
 }

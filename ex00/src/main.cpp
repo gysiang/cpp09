@@ -6,22 +6,26 @@
 /*   By: gyong-si <gyong-si@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 11:13:33 by gyong-si          #+#    #+#             */
-/*   Updated: 2025/02/10 11:27:15 by gyong-si         ###   ########.fr       */
+/*   Updated: 2025/02/11 09:27:57 by gyong-si         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/BitcoinExchange.hpp"
 
-int main(int ac, char **av)
+int main()
 {
-	if (ac != 2)
+
+	std::string file = "data.csv";
+	Bitcoin_Exchange a;
+
+	try
 	{
-		std::cerr << "Error: could not open file.\n";
+		a.loadDatabase(file);
+		a.printDataBase();
+	}
+	catch (const Bitcoin_Exchange::BitcoinException &e)
+	{
+		std::cerr << e.what() << std::endl;
 		return (1);
 	}
-	else
-	{
-		// process the file
-	}
-	return (0);
 }
