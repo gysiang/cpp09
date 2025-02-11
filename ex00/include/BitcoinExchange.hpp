@@ -6,7 +6,7 @@
 /*   By: gyong-si <gyong-si@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 11:12:39 by gyong-si          #+#    #+#             */
-/*   Updated: 2025/02/11 13:59:37 by gyong-si         ###   ########.fr       */
+/*   Updated: 2025/02/11 15:19:33 by gyong-si         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,11 +42,9 @@ class Bitcoin_Exchange
 		void loadDatabase(const std::string &filename);
 		// process text file
 		void processInput(const std::string &filename);
-		// get the closest earlier date price
-		double getClosestPrice(const std::string &date) const;
-		std::string findPreviousDate(const std::string &date) const;
 		void printDataBase();
 		void printInput();
+		void calculateAndPrint() const;
 
 		class BitcoinException : public std::exception
 		{

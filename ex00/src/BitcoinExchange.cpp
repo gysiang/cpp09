@@ -6,7 +6,7 @@
 /*   By: gyong-si <gyong-si@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 11:13:43 by gyong-si          #+#    #+#             */
-/*   Updated: 2025/02/11 13:59:16 by gyong-si         ###   ########.fr       */
+/*   Updated: 2025/02/11 15:24:08 by gyong-si         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,9 +100,9 @@ double Bitcoin_Exchange::isValidExValue(const std::string &value) const
 	double p;
 
 	p = std::strtod(value.c_str(), &endPtr);
-	if (*endPtr != '\0' || p < 0 || p > 1000)
+	if (*endPtr != '\0')
 	{
-		throw BitcoinException("Error: Invalid price value in database: " + value);
+		throw BitcoinException("Error: Invalid price value in input file: " + value);
 	}
 	return (p);
 }
@@ -169,14 +169,40 @@ void Bitcoin_Exchange::processInput(const std::string &filename)
 
 std::string trim(const std::string &str)
 {
-    std::string::const_iterator start = str.begin();
-    while (start != str.end() && std::isspace(*start)) {
-        ++start;
-    }
-    std::string::const_iterator end = str.end();
-    do {
-        --end;
-    } while (end != start && std::isspace(*end));
-    // Return trimmed string
-    return std::string(start, end + 1);
+	std::string::const_iterator start = str.begin();
+	while (start != str.end() && std::isspace(*start))
+	{
+		++start;
+	}
+	std::string::const_iterator end = str.end();
+	do
+	{
+		--end;
+	} while (end != start && std::isspace(*end));
+	// Return trimmed string
+	return std::string(start, end + 1);
+}
+
+void Bitcoin_Exchange::calculateAndPrint() const
+{
+	for (std::map<std::string, double>::const_iterator it = _inputData.begin(); it != _inputData.end(); ++it)
+	{
+		std::string date = it->first;
+		double exchangeRate = it->second;
+
+		std::map<std::string, double>::const_iterator priceIt = _priceData.lower_bound(date);
+		if (priceIt == _priceData.end() || (priceIt->first != date && priceIt != _priceData.begin()))
+		{
+			--priceIt;
+		}
+
+		if (priceIt != _priceData.end())
+		{
+			double price = priceIt->second;
+			double result = price * exchangeRate;
+			std::cout << date << " => " << exchangeRate << " = " << result << std::endl;
+		}
+		else
+			std::cerr << "Error: No price data available for date: " << date << std::endl;
+	}
 }
