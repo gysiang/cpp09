@@ -6,7 +6,7 @@
 /*   By: gyong-si <gyong-si@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 11:13:43 by gyong-si          #+#    #+#             */
-/*   Updated: 2025/02/11 10:03:21 by gyong-si         ###   ########.fr       */
+/*   Updated: 2025/02/11 13:59:16 by gyong-si         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,20 @@ double Bitcoin_Exchange::isValidValue(const std::string &value) const
 	return (p);
 }
 
+double Bitcoin_Exchange::isValidExValue(const std::string &value) const
+{
+	char *endPtr;
+	double p;
+
+	p = std::strtod(value.c_str(), &endPtr);
+	if (*endPtr != '\0' || p < 0 || p > 1000)
+	{
+		throw BitcoinException("Error: Invalid price value in database: " + value);
+	}
+	return (p);
+}
+
+
 void Bitcoin_Exchange::printDataBase()
 {
 	std::cout << "date | value" << std::endl;
@@ -105,5 +119,64 @@ void Bitcoin_Exchange::printDataBase()
 		std::cout << "Date: " << it->first << " | Price: " << std::fixed << std::setprecision(2) << it->second << std::endl;
 		++it;
 	}
+}
 
+void Bitcoin_Exchange::printInput()
+{
+	std::cout << "date | value" << std::endl;
+
+	std::map<std::string, double>::const_iterator it = _inputData.begin();
+	std::map<std::string, double>::const_iterator it_end = _inputData.end();
+	while (it != it_end)
+	{
+		std::cout << "Date: " << it->first << " | Price: " << std::fixed << std::setprecision(2) << it->second << std::endl;
+		++it;
+	}
+}
+
+
+void Bitcoin_Exchange::processInput(const std::string &filename)
+{
+	std::ifstream file(filename.c_str());
+	if (!file.is_open())
+	{
+		throw BitcoinException("Error: Could not open input file.");
+	}
+	std::string line;
+	std::getline(file, line);
+	while (std::getline(file, line))
+	{
+		std::stringstream ss(line);
+		std::string date, priceStr;
+
+		// read the date and price
+		if (!std::getline(ss, date, '|') || !std::getline(ss, priceStr))
+		{
+			throw BitcoinException("Error: Invalid line format in database.");
+		};
+		date = trim(date);
+		priceStr = trim(priceStr);
+		// check if the date is valid
+		if (!isValidDate(date))
+		{
+			throw BitcoinException("Error: Invalid date format in database: " + date);
+		}
+		// convert the type of the price to a double to save to our struct
+		double price = isValidExValue(priceStr);
+		_inputData[date] = price;
+	}
+}
+
+std::string trim(const std::string &str)
+{
+    std::string::const_iterator start = str.begin();
+    while (start != str.end() && std::isspace(*start)) {
+        ++start;
+    }
+    std::string::const_iterator end = str.end();
+    do {
+        --end;
+    } while (end != start && std::isspace(*end));
+    // Return trimmed string
+    return std::string(start, end + 1);
 }

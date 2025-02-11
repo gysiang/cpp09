@@ -6,29 +6,32 @@
 /*   By: gyong-si <gyong-si@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 11:12:39 by gyong-si          #+#    #+#             */
-/*   Updated: 2025/02/11 10:03:03 by gyong-si         ###   ########.fr       */
+/*   Updated: 2025/02/11 13:59:37 by gyong-si         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef BITCOIN_EXCHANGE_HPP
 # define BITCOIN_EXCHANGE_HPP
 
-#include <iostream>
-#include <map>
-#include <fstream>
+#include <algorithm>
+#include <cctype>
 #include <string>
-#include <stdexcept>
+#include <fstream>
 #include <sstream>
-#include <cstdlib>
+#include <map>
+#include <stdexcept>
 #include <iomanip>
+#include <iostream>
 
 class Bitcoin_Exchange
 {
 	private:
 		std::map<std::string, double> _priceData;
+		std::map<std::string, double> _inputData;
 
 		bool isValidDate(const std::string &date) const;
 		double isValidValue(const std::string &value) const;
+		double isValidExValue(const std::string &value) const;
 		bool isLeapYear(int year) const;
 
 	public:
@@ -43,6 +46,7 @@ class Bitcoin_Exchange
 		double getClosestPrice(const std::string &date) const;
 		std::string findPreviousDate(const std::string &date) const;
 		void printDataBase();
+		void printInput();
 
 		class BitcoinException : public std::exception
 		{
@@ -55,5 +59,7 @@ class Bitcoin_Exchange
 		};
 
 };
+
+std::string trim(const std::string &str);
 
 #endif

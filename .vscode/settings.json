@@ -49,6 +49,14 @@
 		"cinttypes": "cpp",
 		"typeinfo": "cpp",
 		"sstream": "cpp",
-		"iomanip": "cpp"
+		"iomanip": "cpp",
+		"ctime": "cpp",
+		"bitset": "cpp",
+		"complex": "cpp",
+		"list": "cpp",
+		"set": "cpp",
+		"optional": "cpp",
+		"typeindex": "cpp",
+		"variant": "cpp"
 	}
 }
