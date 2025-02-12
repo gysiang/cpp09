@@ -1,6 +1,6 @@
 CC = c++
 
-CFLAGS = -Wall -Wextra -Werror -std=c++98 -I include -MMD -MP
+CFLAGS = -Wall -Wextra -Werror -std=c++98 -I include -MMD -MP -g
 
 TARGET = RPN
 

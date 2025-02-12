@@ -6,7 +6,7 @@
 /*   By: gyong-si <gyong-si@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 11:13:02 by gyong-si          #+#    #+#             */
-/*   Updated: 2025/02/12 17:38:41 by gyong-si         ###   ########.fr       */
+/*   Updated: 2025/02/12 19:52:38 by gyong-si         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,16 +22,16 @@ std::stack<int> calculateExpression(const std::string &token, std::stack<int> &s
 		std::cerr << "Error: Not enough operands for operation " << token << std::endl;
 		return (stack);
 	}
-	int num1 = stack.top();
-	stack.pop();
 	int num2 = stack.top();
+	stack.pop();
+	int num1 = stack.top();
 	stack.pop();
 	int result = 0;
 
 	if (token == "+")
 		result = num1 + num2;
 	else if (token == "-")
-		result = num1 + num2;
+		result = num1 - num2;
 	else if (token == "*")
 		result = num1 * num2;
 	else if (token == "/")
@@ -47,12 +47,13 @@ std::stack<int> calculateExpression(const std::string &token, std::stack<int> &s
 	return (stack);
 }
 
-bool isValidNumber(const std::string& token)
+bool isValidNumber(const std::string &token)
 {
-	if (token.empty()) return false;
+    if (token.empty()) return false;  // Reject empty strings
 
 	size_t i = 0;
-	if (token[i] == '-') i++;
+	if (token[0] == '-' && token[1])  // Allow negative numbers
+		i = 1;
 
 	for (; i < token.size(); i++)
 	{
@@ -61,6 +62,7 @@ bool isValidNumber(const std::string& token)
 	}
 	return true;
 }
+
 
 int stringToInt(const std::string& str)
 {
@@ -73,7 +75,6 @@ int stringToInt(const std::string& str)
 	return num;
 }
 
-
 void processInput(const std::string &input)
 {
 	std::stringstream ss(input);
@@ -82,22 +83,42 @@ void processInput(const std::string &input)
 
 	while (ss >> token)
 	{
-		if (isValidNumber(token))
-			stack.push(stringToInt(token));
-		else if (token == "+" || token == "-" || token == "*" || token == "/")
-			stack = calculateExpression(token, stack);
-		else
+		std::cout << "Processing token: " << token << std::endl;
+		try
 		{
-			std::cerr << "Error" << std::endl;
-			return ;
+			if (isValidNumber(token))
+			{
+				stack.push(stringToInt(token));
+			}
+			else if (token == "+" || token == "-" || token == "*" || token == "/")
+			{
+				if (stack.size() < 2)
+				{
+					std::cerr << "Error: Not enough operands for operator '" << token << "'" << std::endl;
+					return;
+				}
+				stack = calculateExpression(token, stack);
+			}
+			else
+			{
+				std::cerr << "Error: Invalid token '" << token << "'" << std::endl;
+				return;
+			}
+		}
+		catch (const std::invalid_argument &e)
+		{
+			std::cerr << "Error: " << e.what() << std::endl;
+			return;
+		}
+		catch (const std::out_of_range &e)
+		{
+			std::cerr << "Error: Number out of range" << std::endl;
+			return;
 		}
 	}
-	// For debugging, print the stack content
-	std::cout << "Result after processing: ";
-	while (!stack.empty())
-	{
-		std::cout << stack.top() << " ";
-		stack.pop();
-	}
-	std::cout << std::endl;
+
+	if (stack.size() == 1)
+		std::cout << "Result: " << stack.top() << std::endl;
+	else
+		std::cerr << "Error: Stack has more than one result" << std::endl;
 }
