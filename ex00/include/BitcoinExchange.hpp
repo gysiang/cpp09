@@ -6,7 +6,7 @@
 /*   By: gyong-si <gyong-si@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 11:12:39 by gyong-si          #+#    #+#             */
-/*   Updated: 2025/02/11 15:19:33 by gyong-si         ###   ########.fr       */
+/*   Updated: 2025/02/12 09:34:39 by gyong-si         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ class Bitcoin_Exchange
 		double isValidValue(const std::string &value) const;
 		double isValidExValue(const std::string &value) const;
 		bool isLeapYear(int year) const;
+		bool validateInput(const std::string &date, double exchangeRate) const;
 
 	public:
 		Bitcoin_Exchange();

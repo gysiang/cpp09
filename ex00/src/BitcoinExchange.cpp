@@ -6,7 +6,7 @@
 /*   By: gyong-si <gyong-si@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 11:13:43 by gyong-si          #+#    #+#             */
-/*   Updated: 2025/02/11 16:11:27 by gyong-si         ###   ########.fr       */
+/*   Updated: 2025/02/12 09:36:16 by gyong-si         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,11 +156,6 @@ void Bitcoin_Exchange::processInput(const std::string &filename)
 		};
 		date = trim(date);
 		priceStr = trim(priceStr);
-		// check if the date is valid
-		if (!isValidDate(date))
-		{
-			throw BitcoinException("Error: Invalid date format in database: " + date);
-		}
 		// convert the type of the price to a double to save to our struct
 		double price = isValidExValue(priceStr);
 		_inputData[date] = price;
@@ -183,6 +178,26 @@ std::string trim(const std::string &str)
 	return std::string(start, end + 1);
 }
 
+bool Bitcoin_Exchange::validateInput(const std::string &date, double exchangeRate) const
+{
+	if (!isValidDate(date))
+	{
+		std::cout << "Error: Invalid date format." << std::endl;
+		return (false);
+	}
+	if (exchangeRate < 0)
+	{
+		std::cout << "Error: not a positive number." << std::endl;
+		return (false);
+	}
+	if (exchangeRate > 1000)
+	{
+		std::cout << "Error: too large a number." << std::endl;
+		return (false);
+	}
+	return (true);
+}
+
 void Bitcoin_Exchange::calculateAndPrint() const
 {
 	for (std::map<std::string, double>::const_iterator it = _inputData.begin(); it != _inputData.end(); ++it)
@@ -190,22 +205,14 @@ void Bitcoin_Exchange::calculateAndPrint() const
 		std::string date = it->first;
 		double exchangeRate = it->second;
 
-		if (exchangeRate < 0)
-		{
-			std::cout << "Error: not a positive number."<< std::endl;
-			++it;
-		}
-		if (exchangeRate > 1000)
-		{
-			std::cout << "Error: too large a number. "<< std::endl;
-			++it;
-		}
+		if (!validateInput(date, exchangeRate))
+			continue;
+
 		std::map<std::string, double>::const_iterator priceIt = _priceData.lower_bound(date);
 		if (priceIt == _priceData.end() || (priceIt->first != date && priceIt != _priceData.begin()))
 		{
 			--priceIt;
 		}
-
 		if (priceIt != _priceData.end())
 		{
 			double price = priceIt->second;
