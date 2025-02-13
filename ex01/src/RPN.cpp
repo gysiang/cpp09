@@ -6,7 +6,7 @@
 /*   By: gyong-si <gyong-si@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 11:13:02 by gyong-si          #+#    #+#             */
-/*   Updated: 2025/02/12 19:52:38 by gyong-si         ###   ########.fr       */
+/*   Updated: 2025/02/13 09:18:07 by gyong-si         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ void processInput(const std::string &input)
 
 	while (ss >> token)
 	{
-		std::cout << "Processing token: " << token << std::endl;
+		//std::cout << "Processing token: " << token << std::endl;
 		try
 		{
 			if (isValidNumber(token))
@@ -101,7 +101,7 @@ void processInput(const std::string &input)
 			}
 			else
 			{
-				std::cerr << "Error: Invalid token '" << token << "'" << std::endl;
+				std::cerr << "Error" << std::endl;
 				return;
 			}
 		}
