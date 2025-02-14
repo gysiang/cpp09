@@ -6,7 +6,7 @@
 /*   By: gyong-si <gyong-si@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 10:15:55 by gyong-si          #+#    #+#             */
-/*   Updated: 2025/02/12 17:36:06 by gyong-si         ###   ########.fr       */
+/*   Updated: 2025/02/14 13:57:02 by gyong-si         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,19 @@
 #include <stack>
 #include <sstream>
 
-void processInput(const std::string &input);
-std::stack<int> calculateExpression(const std::string &token, std::stack<int> &stack);
+class RPN
+{
+	private:
+		std::stack<int> v;
+
+	public:
+		RPN();
+		~RPN();
+		RPN(const RPN &src);
+		RPN &operator=(const RPN &src);
+		void processInput(const std::string &input);
+		std::stack<int> calculateExpression(const std::string &token, std::stack<int> &stack);
+};
+
 
 #endif

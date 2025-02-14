@@ -6,7 +6,7 @@
 /*   By: gyong-si <gyong-si@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 11:13:43 by gyong-si          #+#    #+#             */
-/*   Updated: 2025/02/12 09:36:16 by gyong-si         ###   ########.fr       */
+/*   Updated: 2025/02/13 15:27:06 by gyong-si         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,17 @@
 Bitcoin_Exchange::Bitcoin_Exchange() {};
 
 Bitcoin_Exchange::~Bitcoin_Exchange() {};
+
+Bitcoin_Exchange::Bitcoin_Exchange(const Bitcoin_Exchange &src)
+{
+	*this = src;
+};
+
+Bitcoin_Exchange &Bitcoin_Exchange::operator=(const Bitcoin_Exchange &src)
+{
+	_priceData = src._priceData;
+	return (*this);
+}
 
 void Bitcoin_Exchange::loadDatabase(const std::string &filename)
 {

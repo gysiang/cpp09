@@ -6,7 +6,7 @@
 /*   By: gyong-si <gyong-si@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 11:12:39 by gyong-si          #+#    #+#             */
-/*   Updated: 2025/02/12 09:34:39 by gyong-si         ###   ########.fr       */
+/*   Updated: 2025/02/13 15:26:28 by gyong-si         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ class Bitcoin_Exchange
 	public:
 		Bitcoin_Exchange();
 		~Bitcoin_Exchange();
+		Bitcoin_Exchange(const Bitcoin_Exchange &src);
+		Bitcoin_Exchange &operator=(const Bitcoin_Exchange &src);
 
 		// load the database
 		void loadDatabase(const std::string &filename);
