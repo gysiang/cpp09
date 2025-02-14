@@ -6,14 +6,28 @@
 /*   By: gyong-si <gyong-si@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 10:54:02 by gyong-si          #+#    #+#             */
-/*   Updated: 2025/02/13 13:54:18 by gyong-si         ###   ########.fr       */
+/*   Updated: 2025/02/14 14:05:13 by gyong-si         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/PmergeMe.hpp"
 
+PmergeMe::PmergeMe() {};
 
-bool isValidNumber(const std::string &token)
+PmergeMe::~PmergeMe() {};
+
+PmergeMe::PmergeMe(const PmergeMe &src)
+{
+	v = src.v;
+}
+
+PmergeMe &PmergeMe::operator=(const PmergeMe &src)
+{
+	v = src.v;
+	return (*this);
+}
+
+bool PmergeMe::isValidNumber(const std::string &token)
 {
 	if (token.empty()) return false;  // Reject empty strings
 
@@ -29,7 +43,7 @@ bool isValidNumber(const std::string &token)
 	return true;
 }
 
-int insertIntoVector(std::vector<unsigned int> &s, int ac, char **av)
+int PmergeMe::insertIntoVec(std::vector<unsigned int> &s, int ac, char **av)
 {
 	for (int i = 1; i < ac; ++i)
 	{
@@ -51,7 +65,7 @@ int insertIntoVector(std::vector<unsigned int> &s, int ac, char **av)
 }
 
 
-void printVector(std::vector<unsigned int> s)
+void PmergeMe::printVec(std::vector<unsigned int> s)
 {
 	std::vector<unsigned int>::const_iterator it = s.begin();
 	std::vector<unsigned int>::const_iterator it_end = s.end();
