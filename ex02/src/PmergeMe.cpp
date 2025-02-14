@@ -6,7 +6,7 @@
 /*   By: gyong-si <gyong-si@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 10:54:02 by gyong-si          #+#    #+#             */
-/*   Updated: 2025/02/14 14:05:13 by gyong-si         ###   ########.fr       */
+/*   Updated: 2025/02/14 15:25:01 by gyong-si         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ bool PmergeMe::isValidNumber(const std::string &token)
 	return true;
 }
 
-int PmergeMe::insertIntoVec(std::vector<unsigned int> &s, int ac, char **av)
+int PmergeMe::insertIntoVec(int ac, char **av)
 {
 	for (int i = 1; i < ac; ++i)
 	{
@@ -52,7 +52,7 @@ int PmergeMe::insertIntoVec(std::vector<unsigned int> &s, int ac, char **av)
 			if (isValidNumber(arg))
 			{
 				unsigned int num = strtoul(arg.c_str(), NULL, 10);
-				s.push_back(num);
+				v.push_back(num);
 			}
 			else
 			{
@@ -65,10 +65,10 @@ int PmergeMe::insertIntoVec(std::vector<unsigned int> &s, int ac, char **av)
 }
 
 
-void PmergeMe::printVec(std::vector<unsigned int> s)
+void PmergeMe::printVec()
 {
-	std::vector<unsigned int>::const_iterator it = s.begin();
-	std::vector<unsigned int>::const_iterator it_end = s.end();
+	std::vector<unsigned int>::const_iterator it = v.begin();
+	std::vector<unsigned int>::const_iterator it_end = v.end();
 
 	std::cout << "Printing out the contents of vector" << std::endl;
 	std::cout << "-----------------------------------" << std::endl;

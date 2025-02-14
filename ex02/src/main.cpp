@@ -6,7 +6,7 @@
 /*   By: gyong-si <gyong-si@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 09:20:17 by gyong-si          #+#    #+#             */
-/*   Updated: 2025/02/13 13:45:28 by gyong-si         ###   ########.fr       */
+/*   Updated: 2025/02/14 15:25:23 by gyong-si         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int main(int ac, char **av)
 {
-	std::vector<unsigned int> v;
+	PmergeMe a;
 
 	if (ac < 2)
 	{
@@ -24,9 +24,9 @@ int main(int ac, char **av)
 	else
 	{
 		// insert the numbers into the vector
-		insertIntoVector(v, ac, av);
+		a.insertIntoVec(ac, av);
 		// print the number to check
-		printVector(v);
+		a.printVec();
 	}
 
 	return (0);
