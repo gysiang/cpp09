@@ -6,7 +6,7 @@
 /*   By: gyong-si <gyong-si@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 09:20:17 by gyong-si          #+#    #+#             */
-/*   Updated: 2025/02/17 10:49:22 by gyong-si         ###   ########.fr       */
+/*   Updated: 2025/02/17 14:06:35 by gyong-si         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,14 +23,8 @@ int main(int ac, char **av)
 	}
 	else
 	{
-		// insert the numbers into the vector
-		a.insertIntoVec(ac, av);
-		// print the number to check
-		//a.printVec();
-		//a.groupIntoSortedPairs();
-		a.splitIntoSeq();
+		a.mergeInsert(ac, av);
 	}
-
 	return (0);
 }
 

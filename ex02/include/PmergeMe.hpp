@@ -6,7 +6,7 @@
 /*   By: gyong-si <gyong-si@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 09:20:08 by gyong-si          #+#    #+#             */
-/*   Updated: 2025/02/17 11:05:35 by gyong-si         ###   ########.fr       */
+/*   Updated: 2025/02/17 14:23:57 by gyong-si         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,35 +19,32 @@
 #include <string>
 #include <deque>
 #include <cstdlib>
+#include <algorithm>
 
 template <typename Container>
 class PmergeMe
 {
 	private:
 		Container v;
-		Container mainSeq;
-		Container pendSeq;
 
 	public:
 		PmergeMe() {};
 		~PmergeMe() {};
-		PmergeMe(const PmergeMe &src) : v(src.v), mainSeq(src.mainSeq), pendSeq(src.pendSeq) {}
+		PmergeMe(const PmergeMe &src) : v(src.v) {};
 		PmergeMe &operator=(const PmergeMe &src)
 		{
 			if (this != &src)
 			{
 				v = src.v;
-				mainSeq = src.mainSeq;
-				pendSeq = src.pendSeq;
 			}
 			return *this;
 		}
 		size_t	insertIntoContainer(int ac, char **av);
 		bool	isValidNumber(const std::string &token);
-		void	printContainer();
-		void	splitIntoSeq();
-		size_t	binarySeachInsertPos(const Container &s, unsigned int num);
-		void 	binaryInsert();
+		void	printContainer(const Container &a);
+		void	splitIntoSeq(Container &a, Container &b);
+		size_t	binarySeachInsertPos(Container &s, unsigned int num);
+		void 	mergeInsert(int ac, char **av);
 	};
 
 template <typename Container>
@@ -70,7 +67,7 @@ bool PmergeMe<Container>::isValidNumber(const std::string &token)
 template <typename Container>
 size_t PmergeMe<Container>::insertIntoContainer(int ac, char **av)
 {
-	for (size_t i = 1; i < ac; ++i)
+	for (int i = 1; i < ac; ++i)
 	{
 		std::string arg(av[i]);
 		{
@@ -90,10 +87,10 @@ size_t PmergeMe<Container>::insertIntoContainer(int ac, char **av)
 }
 
 template <typename Container>
-void PmergeMe<Container>::printContainer()
+void PmergeMe<Container>::printContainer(const Container &a)
 {
-	typename Container::const_iterator it = v.begin();
-	typename Container::const_iterator it_end = v.end();
+	typename Container::const_iterator it = a.begin();
+	typename Container::const_iterator it_end = a.end();
 
 	std::cout << "Printing out the contents" << std::endl;
 	std::cout << "-----------------------------------" << std::endl;
@@ -106,11 +103,8 @@ void PmergeMe<Container>::printContainer()
 }
 
 template <typename Container>
-void PmergeMe<Container>::splitIntoSeq()
+void PmergeMe<Container>::splitIntoSeq(Container &mainSeq, Container &pendSeq)
 {
-	mainSeq.clear();
-	pendSeq.clear();
-
 	for (size_t i = 0; i + 1 < v.size(); i += 2)
 	{
 		unsigned int first = v[i];
@@ -127,19 +121,10 @@ void PmergeMe<Container>::splitIntoSeq()
 		unsigned int last = v.back();
 		pendSeq.push_back(last);
 	}
-	std::cout << "Main Sequence: ";
-	for (size_t i = 0; i < mainSeq.size(); i++)
-		std::cout << mainSeq[i] << " ";
-	std::cout << std::endl;
-
-	std::cout << "Pending Sequence: ";
-	for (size_t i = 0; i < pendSeq.size(); i++)
-		std::cout << pendSeq[i] << " ";
-	std::cout << std::endl;
 }
 
 template <typename Container>
-size_t PmergeMe<Container>::binarySeachInsertPos(const Container &s, unsigned int num)
+size_t PmergeMe<Container>::binarySeachInsertPos(Container &s, unsigned int num)
 {
 	size_t left;
 	size_t right;
@@ -158,8 +143,28 @@ size_t PmergeMe<Container>::binarySeachInsertPos(const Container &s, unsigned in
 	return (left);
 }
 
+template <typename Container>
+void PmergeMe<Container>::mergeInsert(int ac, char **av)
+{
+	Container pendingSequence;
+	Container mainSequence;
 
+	insertIntoContainer(ac, av);
+	splitIntoSeq(mainSequence, pendingSequence);
 
+	std::sort(mainSequence.begin(), mainSequence.end());
+
+	for (size_t i = 0; i < pendingSequence.size(); i++)
+	{
+		unsigned int num = pendingSequence[i];
+		// find the pos of the num in the main sequence
+		size_t pos = binarySeachInsertPos(mainSequence, num);
+		// insert the number into the main sequence
+		mainSequence.insert(mainSequence.begin() + pos, num);
+	}
+	// print result
+	printContainer(mainSequence);
+}
 
 
 #endif
