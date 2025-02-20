@@ -6,7 +6,7 @@
 /*   By: gyong-si <gyong-si@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 09:20:08 by gyong-si          #+#    #+#             */
-/*   Updated: 2025/02/20 15:38:30 by gyong-si         ###   ########.fr       */
+/*   Updated: 2025/02/20 16:13:02 by gyong-si         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 #include <algorithm>
 #include <ctime>
 #include <iomanip>
+#include <set>
 
 template <typename Container>
 class PmergeMe
@@ -45,6 +46,7 @@ class PmergeMe
 		{
 			return v.size();
 		}
+
 		size_t	insertIntoContainer(int ac, char **av);
 		bool	isValidNumber(const std::string &token);
 		void	printContainer();
@@ -70,12 +72,13 @@ bool PmergeMe<Container>::isValidNumber(const std::string &token)
 		if (!isdigit(token[i]))
 			return false;
 	}
-	return true;
+	return (true);
 }
 
 template <typename Container>
 size_t PmergeMe<Container>::insertIntoContainer(int ac, char **av)
 {
+	std::set<unsigned int> uniqueNumbers;
 	for (int i = 1; i < ac; ++i)
 	{
 		std::string arg(av[i]);
@@ -83,12 +86,18 @@ size_t PmergeMe<Container>::insertIntoContainer(int ac, char **av)
 			if (isValidNumber(arg))
 			{
 				unsigned int num = strtoul(arg.c_str(), NULL, 10);
+				if (uniqueNumbers.find(num) != uniqueNumbers.end())
+				{
+					std::cerr << "Error: Duplicate number detected : " << num << std::endl;
+					exit(EXIT_FAILURE);
+				}
+				uniqueNumbers.insert(num);
 				v.push_back(num);
 			}
 			else
 			{
 				std::cerr << "Error: '" << arg << "'  is not a valid positive integer." << std::endl;
-				return (1);
+				exit(EXIT_FAILURE);
 			}
 		}
 	}
@@ -204,8 +213,6 @@ void PmergeMe<Container>::mergeInsert()
 template <typename Container>
 double PmergeMe<Container>::runMergeSort()
 {
-	//if (insertIntoContainer(ac, av) == 1)
-	//	return -1
 	clock_t start = clock();
 	mergeInsert();
 	clock_t end = clock();
