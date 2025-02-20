@@ -6,7 +6,7 @@
 /*   By: gyong-si <gyong-si@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 09:20:17 by gyong-si          #+#    #+#             */
-/*   Updated: 2025/02/20 15:41:27 by gyong-si         ###   ########.fr       */
+/*   Updated: 2025/02/20 21:51:43 by gyong-si         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,9 @@ int main(int ac, char **av)
 	else
 	{
 		// run a check to see if all are numbers
+		// isValidNumber
 		// run a check to see if all numbers are not duplicate
+
 		// insert the numbers into the container
 		a.insertIntoContainer(ac, av);
 		b.insertIntoContainer(ac, av);

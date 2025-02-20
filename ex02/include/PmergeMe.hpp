@@ -6,7 +6,7 @@
 /*   By: gyong-si <gyong-si@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 09:20:08 by gyong-si          #+#    #+#             */
-/*   Updated: 2025/02/20 16:13:02 by gyong-si         ###   ########.fr       */
+/*   Updated: 2025/02/20 21:56:39 by gyong-si         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,9 +51,10 @@ class PmergeMe
 		bool	isValidNumber(const std::string &token);
 		void	printContainer();
 		void	splitIntoSeq(Container &a, Container &b);
-		void	recursiveSort(Container &sequence);
-		void	merge(Container &sequence, Container &left, Container &right);
+		//void	recursiveSort(Container &sequence);
+		//void	merge(Container &sequence, Container &left, Container &right);
 		size_t	binarySeachInsertPos(Container &s, unsigned int num);
+		void	insertionSort();
 		void 	mergeInsert();
 		double	runMergeSort();
 };
@@ -109,12 +110,16 @@ void PmergeMe<Container>::printContainer()
 {
 	typename Container::const_iterator it = v.begin();
 	typename Container::const_iterator it_end = v.end();
+	int n = 0;
 
-	while (it != it_end)
+	while (it != it_end && n < 5)
 	{
 		std::cout << *it << " ";
 		it++;
+		n++;
 	}
+	if (v.size() > 5)
+		std::cout << "[...]";
 	std::cout << std::endl;
 }
 
@@ -158,7 +163,7 @@ size_t PmergeMe<Container>::binarySeachInsertPos(Container &s, unsigned int num)
 	}
 	return (left);
 }
-
+/** *
 template <typename Container>
 void PmergeMe<Container>::recursiveSort(Container &sequence)
 {
@@ -192,6 +197,22 @@ void PmergeMe<Container>::merge(Container &sequence, Container &left, Container 
 	while (i < left.size()) sequence.push_back(left[i++]);
 	while (j < right.size()) sequence.push_back(right[j++]);
 }
+**/
+template <typename Container>
+void PmergeMe<Container>::insertionSort()
+{
+	for (size_t i = 1; i < v.size(); i++)
+	{
+		unsigned int key = v[i];
+		int j = i - 1;
+		while (j >= 0 && v[j] > key)
+		{
+			v[j + 1] = v[j];
+			j--;
+		}
+		v[j + 1] = key;
+	}
+}
 
 template <typename Container>
 void PmergeMe<Container>::mergeInsert()
@@ -200,7 +221,12 @@ void PmergeMe<Container>::mergeInsert()
 	Container mainSequence;
 
 	splitIntoSeq(mainSequence, pendingSequence);
-	std::sort(mainSequence.begin(), mainSequence.end());
+
+	if (v.size() < 10)
+		insertionSort();
+	else
+		std::sort(mainSequence.begin(), mainSequence.end());
+
 	for (size_t i = 0; i < pendingSequence.size(); i++)
 	{
 		unsigned int num = pendingSequence[i];
