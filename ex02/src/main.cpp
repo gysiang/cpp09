@@ -6,17 +6,17 @@
 /*   By: gyong-si <gyong-si@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 09:20:17 by gyong-si          #+#    #+#             */
-/*   Updated: 2025/02/20 21:51:43 by gyong-si         ###   ########.fr       */
+/*   Updated: 2025/02/24 14:38:26 by gyong-si         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/PmergeMe.hpp"
+#include "../include/PmergeMeVector.hpp"
+#include "../include/PmergeMeDeque.hpp"
 
 int main(int ac, char **av)
 {
-	PmergeMe<std::vector<unsigned int> > a;
-	PmergeMe<std::deque<unsigned int> > b;
-
+	PmergeMeVector	a;
+	PmergeMeDeque	b;
 	double	vec_time;
 	double	deq_time;
 
@@ -27,29 +27,20 @@ int main(int ac, char **av)
 	}
 	else
 	{
-		// run a check to see if all are numbers
-		// isValidNumber
-		// run a check to see if all numbers are not duplicate
-
-		// insert the numbers into the container
+		runChecks(ac, av);
 		a.insertIntoContainer(ac, av);
 		b.insertIntoContainer(ac, av);
-		// print out the before
 		std::cout << "Before: " << std::endl;
 		a.printContainer();
-		// run the sort
-		vec_time = a.runMergeSort();
-		deq_time = b.runMergeSort();
-		// print the result
+		vec_time = a.getVectorDuration();
+		deq_time = b.getDequeDuration();
 		std::cout << "After: " << std::endl;
 		a.printContainer();
 		std::cout << std::fixed << std::setprecision(6);
 		std::cout << "Time to process a range of " << a.size()
 		<< " elements with std::vector: " << vec_time << " us" << std::endl;
-
 		std::cout << "Time to process a range of " << b.size()
 		<< " elements with std::deque: " << deq_time << " us" << std::endl;
-
 	}
 	return (0);
 }
