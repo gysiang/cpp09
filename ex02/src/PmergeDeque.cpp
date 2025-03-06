@@ -6,7 +6,7 @@
 /*   By: gyong-si <gyong-si@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 14:43:04 by gyong-si          #+#    #+#             */
-/*   Updated: 2025/02/23 14:50:33 by gyong-si         ###   ########.fr       */
+/*   Updated: 2025/03/06 15:18:31 by gyong-si         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void PmergeMeDeque::printContainer()
 	std::cout << std::endl;
 }
 
-
+/** *
 void PmergeMeDeque::insertionSort(int left, int right)
 {
 	for (int i = left+1; i <= right; i++)
@@ -149,10 +149,78 @@ void PmergeMeDeque::mergeInsert(int left, int right)
 	}
 }
 
+**/
+
+size_t	binarySearchPos(std::deque<unsigned int> &mainSq, unsigned int num)
+{
+	size_t	left;
+	size_t	right;
+	size_t	mid;
+
+	left = 0;
+	right = mainSq.size();
+	mid = 0;
+	while (left < right)
+	{
+		mid = left + (right - left) / 2;
+		if (mainSq[mid] < num)
+		{
+			left = mid + 1;
+		}
+		else
+		{
+			right = mid;
+		}
+	}
+	return (left);
+}
+
+void	PmergeMeDeque::fordJohnsonSort(std::deque<unsigned int> &v)
+{
+	std::deque<unsigned int>	mainSq;
+	std::deque<unsigned int>	pendSq;
+	bool						hasOdd;
+
+	if (v.size() <= 1)
+		return ;
+
+	hasOdd = (v.size() % 2 != 0); // returns true if odd
+	// Pair and sort each pair
+	for (size_t i = 0; i + 1 < v.size(); i+=2)
+	{
+		if (v[i] < v[i + 1])
+		{
+			mainSq.push_back(v[i]);
+			pendSq.push_back(v[i+1]);
+		}
+		else
+		{
+			mainSq.push_back(v[i+1]);
+			pendSq.push_back(v[i]);
+		}
+	}
+	// deal with the odd element if any
+	if (hasOdd)
+	{
+		pendSq.push_back(v.back());
+	}
+	// recursively sort mainSq
+	fordJohnsonSort(mainSq);
+	// use binarysort
+	for (size_t i = 0; i < pendSq.size(); i++)
+	{
+		unsigned int num = pendSq[i];
+		size_t pos = binarySearchPos(mainSq , num);
+		mainSq.insert(mainSq.begin() + pos, num);
+	}
+	v = mainSq;
+}
+
 double PmergeMeDeque::getDequeDuration()
 {
 	clock_t start = clock();
-	mergeInsert(0, v.size()-1);
+	//mergeInsert(0, v.size()-1);
+	fordJohnsonSort(v);
 	clock_t end = clock();
 	double elapsed = double(end - start) / CLOCKS_PER_SEC;
 	return (elapsed);

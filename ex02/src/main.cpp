@@ -6,7 +6,7 @@
 /*   By: gyong-si <gyong-si@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 09:20:17 by gyong-si          #+#    #+#             */
-/*   Updated: 2025/02/24 14:38:26 by gyong-si         ###   ########.fr       */
+/*   Updated: 2025/03/06 15:27:58 by gyong-si         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,4 +75,14 @@ How binary search works
 Finding Position: O(logN)
 Inserting : O(N)
 
+Why is vector faster then deque
+1. std::vector is stored in a contigous memory block, where all the elements
+are stored together each other in memory. In deque, it is stored in fixed size
+memory blocks. Thus to insert a element, it has to jump between blocks of memory
+to insert, which makes it slower
+2. Modern CPUs are optimized for contigous memory thus will benefit from cache efficiency
+
+In what cases deque is faster than vector
+1. In the situation where many of the insertions are at the front, push pop with deque
+is faster
 */

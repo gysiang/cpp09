@@ -6,7 +6,7 @@
 /*   By: gyong-si <gyong-si@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 14:25:02 by gyong-si          #+#    #+#             */
-/*   Updated: 2025/02/23 10:56:46 by gyong-si         ###   ########.fr       */
+/*   Updated: 2025/03/06 15:08:56 by gyong-si         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,13 @@ class PmergeMeVector
 		size_t	insertIntoContainer(int ac, char **av);
 		void	printContainer();
 
+		/***
 		void	insertionSort(int start, int end);
 		void 	mergeInsert(int start, int end);
 		void	mergeVector(int start, int mid, int end);
+		**/
+
+		void	fordJohnsonSort(std::vector<unsigned int> &v);
 		double	getVectorDuration();
 };
 
