@@ -47,8 +47,8 @@ size_t PmergeMeDeque::insertIntoContainer(int ac, char **av)
 
 void PmergeMeDeque::printContainer()
 {
-	typename std::deque<unsigned int>::const_iterator  it = v.begin();
-	typename std::deque<unsigned int>::const_iterator it_end = v.end();
+	std::deque<unsigned int>::const_iterator  it = v.begin();
+	std::deque<unsigned int>::const_iterator it_end = v.end();
 	int n = 0;
 
 	while (it != it_end && n < 5)

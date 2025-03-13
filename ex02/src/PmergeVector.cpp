@@ -47,8 +47,8 @@ size_t PmergeMeVector::insertIntoContainer(int ac, char **av)
 
 void PmergeMeVector::printContainer()
 {
-	typename std::vector<unsigned int>::const_iterator  it = v.begin();
-	typename std::vector<unsigned int>::const_iterator it_end = v.end();
+	std::vector<unsigned int>::const_iterator  it = v.begin();
+	std::vector<unsigned int>::const_iterator it_end = v.end();
 	int n = 0;
 
 	while (it != it_end && n < 5)
