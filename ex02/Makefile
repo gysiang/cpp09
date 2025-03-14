@@ -11,13 +11,15 @@ SRCS = main.cpp \
 	PmergeDeque.cpp \
 	PmergeVector.cpp \
 	utils.cpp
-	
 
 # Add "src/" prefix for compilation
 SRCS_PATH = $(addprefix $(SRC_DIR)/, $(SRCS))
 
 # Generate object file names
 OBJS = $(patsubst %.cpp, $(OBJ_DIR)/%.o, $(SRCS))
+
+# Dependency files
+DEPS = $(OBJS:.o=.d)
 
 all: $(OBJ_DIR) $(TARGET)
 
@@ -29,9 +31,12 @@ $(TARGET): $(OBJS)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 	$(CC) $(CFLAGS) -c $< -o $@
+	
+# Include dependency files if they exist
+-include $(DEPS)
 
 clean:
-	rm -f $(OBJ_DIR)/*.o
+	rm -rf $(OBJ_DIR)
 
 fclean: clean
 	rm -f $(TARGET)
