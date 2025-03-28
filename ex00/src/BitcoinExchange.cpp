@@ -6,7 +6,7 @@
 /*   By: gyong-si <gyong-si@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 11:13:43 by gyong-si          #+#    #+#             */
-/*   Updated: 2025/02/13 15:27:06 by gyong-si         ###   ########.fr       */
+/*   Updated: 2025/03/28 20:45:26 by gyong-si         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,14 @@ void Bitcoin_Exchange::loadDatabase(const std::string &filename)
 	}
 	std::string line;
 	std::getline(file, line);
+	if (!std::getline(file, line))
+	{
+		throw BitcoinException("Error: data.csv is empty.");
+	}
 	while (std::getline(file, line))
 	{
 		std::stringstream ss(line);
 		std::string date, priceStr;
-
 		// read the date and price
 		if (!std::getline(ss, date, ',') || !std::getline(ss, priceStr))
 		{
@@ -52,10 +55,12 @@ void Bitcoin_Exchange::loadDatabase(const std::string &filename)
 		{
 			throw BitcoinException("Error: Invalid date format in database: " + date);
 		}
+
 		// convert the type of the price to a double to save to our struct
 		double price = isValidValue(priceStr);
 		_priceData[date] = price;
 	}
+
 }
 
 bool Bitcoin_Exchange::isLeapYear(int year) const

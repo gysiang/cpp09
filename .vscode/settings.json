@@ -59,6 +59,7 @@
 		"typeindex": "cpp",
 		"variant": "cpp",
 		"stack": "cpp",
-		"chrono": "cpp"
+		"chrono": "cpp",
+		"ratio": "cpp"
 	}
 }

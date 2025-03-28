@@ -6,7 +6,7 @@
 /*   By: gyong-si <gyong-si@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 11:13:02 by gyong-si          #+#    #+#             */
-/*   Updated: 2025/02/14 13:57:20 by gyong-si         ###   ########.fr       */
+/*   Updated: 2025/03/28 20:51:59 by gyong-si         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,7 @@ std::stack<int> RPN::calculateExpression(const std::string &token, std::stack<in
 	{
 		if (num2 == 0)
 		{
-			std::cerr << "Error: Division by zero" << std::endl;
-			return (stack);
+			throw std::runtime_error("Error: Division by zero");
 		}
 		result = num1 / num2;
 	}
