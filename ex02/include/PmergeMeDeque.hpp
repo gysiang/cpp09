@@ -6,7 +6,7 @@
 /*   By: gyong-si <gyong-si@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 14:37:22 by gyong-si          #+#    #+#             */
-/*   Updated: 2025/03/06 15:17:23 by gyong-si         ###   ########.fr       */
+/*   Updated: 2025/04/09 13:48:11 by gyong-si         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ class PmergeMeDeque
 {
 	private:
 		std::deque<unsigned int> v;
+		std::deque<std::pair<unsigned int, unsigned int> > p;
 
 	public:
 		PmergeMeDeque();
@@ -39,14 +40,15 @@ class PmergeMeDeque
 
 		size_t	insertIntoContainer(int ac, char **av);
 		void	printContainer();
+		void	printPairs() const;
 
-		/** *
-		void	insertionSort(int left, int right);
-		void	mergeDeque(int left, int mid, int right);
-		void	mergeInsert(int left, int right);
-		**/
 		void	fordJohnsonSort(std::deque<unsigned int> &v);
 		double	getDequeDuration();
+		void	getSortedPairs();
+		void	mergeVectorPairs(int left, int mid, int right);
+		void 	mergeSortPairs(int left, int right);
+
+
 };
 
 

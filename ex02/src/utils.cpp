@@ -6,7 +6,7 @@
 /*   By: gyong-si <gyong-si@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 15:57:21 by gyong-si          #+#    #+#             */
-/*   Updated: 2025/02/21 16:00:16 by gyong-si         ###   ########.fr       */
+/*   Updated: 2025/04/08 14:08:17 by gyong-si         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,4 +54,16 @@ int runChecks(int ac, char **av)
 		uniqueNumbers.insert(num);
 	}
 	return (0);
+}
+
+// Returns the k-th Jacobsthal number (J_k)
+size_t Jacobsthal(size_t k)
+{
+	if (k == 0)
+		return (0);
+	if (k == 1)
+		return (1);
+	if (k > 20)
+		return (0);
+	return (Jacobsthal(k - 1) + 2 * Jacobsthal(k - 2));
 }

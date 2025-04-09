@@ -6,7 +6,7 @@
 /*   By: gyong-si <gyong-si@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 14:43:04 by gyong-si          #+#    #+#             */
-/*   Updated: 2025/03/06 15:18:31 by gyong-si         ###   ########.fr       */
+/*   Updated: 2025/04/09 13:58:40 by gyong-si         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,94 +62,22 @@ void PmergeMeDeque::printContainer()
 	std::cout << std::endl;
 }
 
-/** *
-void PmergeMeDeque::insertionSort(int left, int right)
+size_t	binarySearchPosRange(std::deque<unsigned int> &mainSq, unsigned int num, size_t left, size_t right)
 {
-	for (int i = left+1; i <= right; i++)
-	{
-		unsigned int key = v[i];
-		int j = i - 1;
-		while (j >= left && v[j] > key)
-		{
-			v[j+1] = v[j];
-			j--;
-		}
-		v[j+1] = key;
-	}
-}
+	size_t	mid;
 
-void PmergeMeDeque::mergeDeque(int left, int mid, int right)
-{
-	int left_size = mid - left + 1;
-	int right_size = right - mid;
-
-	std::deque<unsigned int> l(left_size);
-	std::deque<unsigned int> r(right_size);
-
-	// this will split the vector into l and r
-	int i = 0;
-	while (i < left_size)
+	if (mainSq.empty())
+		return (0);
+	while (left < right)
 	{
-		l[i] = v[left+1];
-		i++;
-	}
-	int j = 0;
-	while (j < right_size)
-	{
-		r[j] = v[mid+1+j];
-		j++;
-	}
-
-	j = 0;
-	i = 0;
-	int idx = left;
-	while (i < left_size && j < right_size)
-	{
-		if (l[i] <= r[j])
-		{
-			v[idx] = l[i];
-			i++;
-		}
+		mid = left + (right - left) / 2;
+		if (mainSq[mid] < num)
+			left = mid + 1;
 		else
-		{
-			v[idx] = r[j];
-			j++;
-		}
-		idx++;
+			right = mid;
 	}
-
-	while (i < left_size)
-	{
-		v[idx] = l[i];
-		i++;
-		idx++;
-	}
-	while (j < right_size)
-	{
-		v[idx] = r[j];
-		j++;
-		idx++;
-	}
+	return (left);
 }
-
-
-void PmergeMeDeque::mergeInsert(int left, int right)
-{
-	if (left < right)
-	{
-		if (right - left <= 10)
-			insertionSort(left, right);
-		else
-		{
-			int mid = left + (right - left) / 2;
-			mergeInsert(left, mid);
-			mergeInsert(mid+1, right);
-			mergeDeque(left, mid, right);
-		}
-	}
-}
-
-**/
 
 size_t	binarySearchPos(std::deque<unsigned int> &mainSq, unsigned int num)
 {
@@ -164,54 +92,176 @@ size_t	binarySearchPos(std::deque<unsigned int> &mainSq, unsigned int num)
 	{
 		mid = left + (right - left) / 2;
 		if (mainSq[mid] < num)
-		{
 			left = mid + 1;
-		}
 		else
-		{
 			right = mid;
-		}
 	}
 	return (left);
 }
+
+void PmergeMeDeque::mergeVectorPairs(int left, int mid, int right)
+{
+	int left_size = mid - left + 1;
+	int right_size = right - mid;
+
+	std::vector<std::pair<unsigned int, unsigned int> > lvec(left_size);
+	std::vector<std::pair<unsigned int, unsigned int> > rvec(right_size);
+
+	// this will split the vector into l and r
+	int i = 0;
+	while (i < left_size)
+	{
+		lvec[i] = p[left+i];
+		i++;
+	}
+	int j = 0;
+	while (j < right_size)
+	{
+		rvec[j] = p[mid+1+j];
+		j++;
+	}
+
+	j = 0;
+	i = 0;
+	int idx = left;
+	while (i < left_size && j < right_size)
+	{
+		if (lvec[i] <= rvec[j])
+		{
+			p[idx] = lvec[i];
+			i++;
+		}
+		else
+		{
+			p[idx] = rvec[j];
+			j++;
+		}
+		idx++;
+	}
+
+	while (i < left_size)
+	{
+		p[idx] = lvec[i];
+		i++;
+		idx++;
+	}
+	while (j < right_size)
+	{
+		p[idx] = rvec[j];
+		j++;
+		idx++;
+	}
+}
+
+
+void PmergeMeDeque::mergeSortPairs(int left, int right)
+{
+	if (left < right)
+	{
+		int mid = left + (right - left) / 2;
+		mergeSortPairs(left, mid);
+		mergeSortPairs(mid+1, right);
+		//mergeVectorPairs(left, mid, right);
+		std::inplace_merge(p.begin() + left, p.begin() + mid + 1, p.begin() + right + 1);
+	}
+}
+
+void	PmergeMeDeque::getSortedPairs()
+{
+	std::deque<unsigned int>::iterator it = v.begin();
+
+	while (it != v.end())
+	{
+		unsigned int first = *it;
+		it++;
+		if (it != v.end())
+		{
+			unsigned int second = *it;
+			it++;
+			if (first > second)
+			{
+				std::swap(first, second);
+			}
+			p.push_back(std::make_pair(first, second));
+		}
+	}
+}
+
+void insertWithJacobsthal(std::deque<unsigned int> &mainSq, std::deque<unsigned int> &pendSq)
+{
+	size_t k = 2;
+	size_t lastInsertPos = 0;
+	while (pendSq.size() != 0)
+	{
+		size_t batchSize = Jacobsthal(k) - Jacobsthal(k-1);
+		batchSize = std::min(batchSize, pendSq.size());
+		//std::cout << "batchSize: " << batchSize << std::endl;
+
+		size_t pivotPos = pendSq.size() / 2;
+		size_t startPos = (pivotPos >= batchSize / 2) ? pivotPos - batchSize / 2 : 0;
+		startPos = std::min(startPos, pendSq.size() - batchSize);
+
+		for (size_t i = 0; i < batchSize; ++i)
+		{
+			if (pendSq.empty())
+				break;
+
+			size_t left = 0;
+			size_t right = mainSq.size();
+			unsigned int num = pendSq[startPos + i];
+
+			if (lastInsertPos > 0 && num > mainSq[lastInsertPos - 1])
+				left = lastInsertPos;
+			else if (!mainSq.empty() && num < mainSq[0])
+				right = 1;
+
+			size_t pos = binarySearchPosRange(mainSq, num, left, right);
+			//std::cout << "Inserting " << num << " at position " << pos << std::endl;
+			mainSq.insert(mainSq.begin() + pos, num);
+		}
+		pendSq.erase(pendSq.begin() + startPos, pendSq.begin() + startPos + batchSize);
+		k++;
+	}
+}
+
+void PmergeMeDeque::printPairs() const
+{
+	for (size_t i = 0; i < p.size(); i++)
+	{
+		std::cout << "(" << p[i].first << ", " << p[i].second << ") ";
+	}
+	std::cout << std::endl;
+}
+
 
 void	PmergeMeDeque::fordJohnsonSort(std::deque<unsigned int> &v)
 {
 	std::deque<unsigned int>	mainSq;
 	std::deque<unsigned int>	pendSq;
 	bool						hasOdd;
+	unsigned int				oddEle;
 
 	if (v.size() <= 1)
 		return ;
-
-	hasOdd = (v.size() % 2 != 0); // returns true if odd
-	// Pair and sort each pair
-	for (size_t i = 0; i + 1 < v.size(); i+=2)
+	hasOdd = (v.size() % 2 != 0);
+	oddEle = hasOdd ? v.back() : 0;
+	if (hasOdd)
+		v.pop_back();
+	getSortedPairs();
+	mergeSortPairs(0, p.size() -1);
+	//printPairs();
+	for (std::deque<std::pair<unsigned int, unsigned int> >::iterator it = p.begin(); it != p.end(); it++)
 	{
-		if (v[i] < v[i + 1])
-		{
-			mainSq.push_back(v[i]);
-			pendSq.push_back(v[i+1]);
-		}
-		else
-		{
-			mainSq.push_back(v[i+1]);
-			pendSq.push_back(v[i]);
-		}
+		mainSq.push_back(it->first);
+		pendSq.push_back(it->second);
 	}
-	// deal with the odd element if any
+	insertWithJacobsthal(mainSq, pendSq);
+	// using normal binary insertion, insert the odd number into the main seq
 	if (hasOdd)
 	{
-		pendSq.push_back(v.back());
-	}
-	// recursively sort mainSq
-	fordJohnsonSort(mainSq);
-	// use binarysort
-	for (size_t i = 0; i < pendSq.size(); i++)
-	{
-		unsigned int num = pendSq[i];
-		size_t pos = binarySearchPos(mainSq , num);
-		mainSq.insert(mainSq.begin() + pos, num);
+		size_t pos = binarySearchPos(mainSq, oddEle);
+		//std::cout << "Inserting " << oddEle << " at position " << pos << std::endl;
+		mainSq.insert(mainSq.begin() + pos, oddEle);
 	}
 	v = mainSq;
 }
@@ -219,7 +269,6 @@ void	PmergeMeDeque::fordJohnsonSort(std::deque<unsigned int> &v)
 double PmergeMeDeque::getDequeDuration()
 {
 	clock_t start = clock();
-	//mergeInsert(0, v.size()-1);
 	fordJohnsonSort(v);
 	clock_t end = clock();
 	double elapsed = double(end - start) / CLOCKS_PER_SEC;

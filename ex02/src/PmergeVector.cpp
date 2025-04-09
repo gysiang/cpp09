@@ -6,7 +6,7 @@
 /*   By: gyong-si <gyong-si@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 14:38:57 by gyong-si          #+#    #+#             */
-/*   Updated: 2025/03/06 15:14:49 by gyong-si         ###   ########.fr       */
+/*   Updated: 2025/04/09 13:59:52 by gyong-si         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,41 +62,25 @@ void PmergeMeVector::printContainer()
 	std::cout << std::endl;
 }
 
-/** *
-void PmergeMeVector::insertionSort(int left, int right)
-{
-	for (int i = left+1; i <= right; i++)
-	{
-		unsigned int key = v[i];
-		int j = i - 1;
-		while (j >= left && v[j] > key)
-		{
-			v[j+1] = v[j];
-			j--;
-		}
-		v[j+1] = key;
-	}
-}
-
-void PmergeMeVector::mergeVector(int left, int mid, int right)
+void PmergeMeVector::mergeVectorPairs(int left, int mid, int right)
 {
 	int left_size = mid - left + 1;
 	int right_size = right - mid;
 
-	std::vector<unsigned int> lvec(left_size);
-	std::vector<unsigned int> rvec(right_size);
+	std::vector<std::pair<unsigned int, unsigned int> > lvec(left_size);
+	std::vector<std::pair<unsigned int, unsigned int> > rvec(right_size);
 
 	// this will split the vector into l and r
 	int i = 0;
 	while (i < left_size)
 	{
-		lvec[i] = v[left+i];
+		lvec[i] = p[left+i];
 		i++;
 	}
 	int j = 0;
 	while (j < right_size)
 	{
-		rvec[j] = v[mid+1+j];
+		rvec[j] = p[mid+1+j];
 		j++;
 	}
 
@@ -107,12 +91,12 @@ void PmergeMeVector::mergeVector(int left, int mid, int right)
 	{
 		if (lvec[i] <= rvec[j])
 		{
-			v[idx] = lvec[i];
+			p[idx] = lvec[i];
 			i++;
 		}
 		else
 		{
-			v[idx] = rvec[j];
+			p[idx] = rvec[j];
 			j++;
 		}
 		idx++;
@@ -120,59 +104,133 @@ void PmergeMeVector::mergeVector(int left, int mid, int right)
 
 	while (i < left_size)
 	{
-		v[idx] = lvec[i];
+		p[idx] = lvec[i];
 		i++;
 		idx++;
 	}
 	while (j < right_size)
 	{
-		v[idx] = rvec[j];
+		p[idx] = rvec[j];
 		j++;
 		idx++;
 	}
 }
 
 
-void PmergeMeVector::mergeInsert(int left, int right)
+void PmergeMeVector::mergeSortPairs(int left, int right)
 {
 	if (left < right)
 	{
-		if (right - left <= 10)
-			insertionSort(left, right);
-		else
-		{
-			int mid = left + (right - left) / 2;
-			//std::cout << mid << std::endl;
-			mergeInsert(left, mid);
-			mergeInsert(mid+1, right);
-			mergeVector(left, mid, right);
-		}
+		int mid = left + (right - left) / 2;
+		mergeSortPairs(left, mid);
+		mergeSortPairs(mid+1, right);
+		//mergeVectorPairs(left, mid, right);
+		std::inplace_merge(p.begin() + left, p.begin() + mid + 1, p.begin() + right + 1);
 	}
 }
-**/
 
-size_t	binarySearchPos(std::vector<unsigned int> &mainSq, unsigned int num)
+
+size_t	binarySearchPosRange(std::vector<unsigned int> &mainSq, unsigned int num, size_t left, size_t right)
 {
-	size_t	left;
-	size_t	right;
 	size_t	mid;
 
-	left = 0;
-	right = mainSq.size();
-	mid = 0;
+	if (mainSq.empty())
+		return (0);
 	while (left < right)
 	{
 		mid = left + (right - left) / 2;
 		if (mainSq[mid] < num)
-		{
 			left = mid + 1;
-		}
 		else
-		{
 			right = mid;
-		}
 	}
 	return (left);
+}
+
+size_t	binarySearchPos(std::vector<unsigned int> &mainSq, unsigned int num)
+{
+	size_t	mid;
+	size_t	left = 0;
+	size_t	right = mainSq.size();
+
+	if (mainSq.empty())
+		return (0);
+	while (left < right)
+	{
+		mid = left + (right - left) / 2;
+		if (mainSq[mid] < num)
+			left = mid + 1;
+		else
+			right = mid;
+	}
+	return (left);
+}
+
+void	PmergeMeVector::getSortedPairs()
+{
+	std::vector<unsigned int>::iterator it = v.begin();
+
+	while (it != v.end())
+	{
+		unsigned int first = *it;
+		it++;
+		if (it != v.end())
+		{
+			unsigned int second = *it;
+			it++;
+			if (first > second)
+			{
+				std::swap(first, second);
+			}
+			p.push_back(std::make_pair(first, second));
+		}
+	}
+}
+
+void PmergeMeVector::printPairs() const
+{
+    for (size_t i = 0; i < p.size(); i++)
+    {
+        std::cout << "(" << p[i].first << ", " << p[i].second << ") ";
+    }
+    std::cout << std::endl;
+}
+
+void PmergeMeVector::insertWithJacobsthal(std::vector<unsigned int> &mainSq, std::vector<unsigned int> &pendSq)
+{
+	size_t k = 2;
+	size_t lastInsertPos = 0;
+	while (pendSq.size() != 0)
+	{
+		size_t batchSize = Jacobsthal(k) - Jacobsthal(k-1);
+		batchSize = std::min(batchSize, pendSq.size());
+		//std::cout << "batchSize: " << batchSize << std::endl;
+
+		size_t pivotPos = pendSq.size() / 2;
+		size_t startPos = (pivotPos >= batchSize / 2) ? pivotPos - batchSize / 2 : 0;
+		startPos = std::min(startPos, pendSq.size() - batchSize);
+
+		for (size_t i = 0; i < batchSize; ++i)
+		{
+			if (pendSq.empty())
+				break;
+
+			size_t left = 0;
+			size_t right = mainSq.size();
+			unsigned int num = pendSq[startPos + i];
+
+			if (lastInsertPos > 0 && num > mainSq[lastInsertPos - 1])
+				left = lastInsertPos;
+			else if (!mainSq.empty() && num < mainSq[0])
+				right = 1;
+
+			size_t pos = binarySearchPosRange(mainSq, num, left, right);
+			//std::cout << "Inserting " << num << " at position " << pos << std::endl;
+			mainSq.insert(mainSq.begin() + pos, num);
+		}
+		pendSq.erase(pendSq.begin() + startPos, pendSq.begin() + startPos + batchSize);
+		k++;
+	}
 }
 
 void	PmergeMeVector::fordJohnsonSort(std::vector<unsigned int> &v)
@@ -180,38 +238,51 @@ void	PmergeMeVector::fordJohnsonSort(std::vector<unsigned int> &v)
 	std::vector<unsigned int>	mainSq;
 	std::vector<unsigned int>	pendSq;
 	bool						hasOdd;
+	unsigned int				oddEle;
 
 	if (v.size() <= 1)
 		return ;
+	hasOdd = (v.size() % 2 != 0);
+	oddEle = hasOdd ? v.back() : 0;
+	if (hasOdd)
+		v.pop_back();
 
-	hasOdd = (v.size() % 2 != 0); // returns true if odd
-	// Pair and sort each pair
-	for (size_t i = 0; i + 1 < v.size(); i+=2)
+	getSortedPairs();
+	/** *
+	std::cout << "After getSortedPairs" << std::endl;
+	printPairs();
+	std::cout << "After mergeSortPairs" << std::endl;
+	**/
+	mergeSortPairs(0, p.size() -1);
+	//printPairs();
+
+	for (std::vector<std::pair<unsigned int, unsigned int> >::iterator it = p.begin(); it != p.end(); it++)
 	{
-		if (v[i] < v[i + 1])
-		{
-			mainSq.push_back(v[i]);
-			pendSq.push_back(v[i+1]);
-		}
-		else
-		{
-			mainSq.push_back(v[i+1]);
-			pendSq.push_back(v[i]);
-		}
+		mainSq.push_back(it->first);
+		pendSq.push_back(it->second);
 	}
-	// deal with the odd element if any
+	/** *
+	std::cout << "Main Sq:" << std::endl;
+	for (std::vector<unsigned int>::iterator it = mainSq.begin(); it != mainSq.end(); it++)
+	{
+		std::cout << *it << " ";
+	}
+	std::cout << std::endl;
+
+	std::cout << "Pend Sq:" << std::endl;
+	for (std::vector<unsigned int>::iterator it = pendSq.begin(); it != pendSq.end(); it++)
+	{
+		std::cout << *it << " ";
+	}
+	std::cout << std::endl;
+	**/
+	insertWithJacobsthal(mainSq, pendSq);
+
 	if (hasOdd)
 	{
-		pendSq.push_back(v.back());
-	}
-	// recursively sort mainSq
-	fordJohnsonSort(mainSq);
-	// use binarysort
-	for (size_t i = 0; i < pendSq.size(); i++)
-	{
-		unsigned int num = pendSq[i];
-		size_t pos = binarySearchPos(mainSq , num);
-		mainSq.insert(mainSq.begin() + pos, num);
+		size_t pos = binarySearchPos(mainSq, oddEle);
+		//std::cout << "Inserting " << oddEle << " at position " << pos << std::endl;
+		mainSq.insert(mainSq.begin() + pos, oddEle);
 	}
 	v = mainSq;
 }
@@ -220,7 +291,6 @@ void	PmergeMeVector::fordJohnsonSort(std::vector<unsigned int> &v)
 double PmergeMeVector::getVectorDuration()
 {
 	clock_t start = clock();
-	//mergeInsert(0, v.size()-1);
 	fordJohnsonSort(v);
 	clock_t end = clock();
 	double elapsed = double(end - start) / CLOCKS_PER_SEC;

@@ -6,7 +6,7 @@
 /*   By: gyong-si <gyong-si@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 09:20:17 by gyong-si          #+#    #+#             */
-/*   Updated: 2025/03/06 15:27:58 by gyong-si         ###   ########.fr       */
+/*   Updated: 2025/04/09 14:00:27 by gyong-si         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,10 @@ int main(int ac, char **av)
 		b.insertIntoContainer(ac, av);
 		std::cout << "Before: " << std::endl;
 		a.printContainer();
+		/** *
+		a.getVectorDuration();
+		a.printContainer();
+		**/
 		vec_time = a.getVectorDuration();
 		deq_time = b.getDequeDuration();
 		std::cout << "After: " << std::endl;

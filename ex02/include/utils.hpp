@@ -6,7 +6,7 @@
 /*   By: gyong-si <gyong-si@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 15:57:51 by gyong-si          #+#    #+#             */
-/*   Updated: 2025/02/21 15:57:53 by gyong-si         ###   ########.fr       */
+/*   Updated: 2025/04/08 09:49:14 by gyong-si         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,5 +27,6 @@
 
 bool	isValidNumber(const std::string &token);
 int		runChecks(int ac, char **av);
+size_t	Jacobsthal(size_t k);
 
 #endif
