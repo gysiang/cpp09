@@ -6,7 +6,7 @@
 /*   By: gyong-si <gyong-si@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 14:38:57 by gyong-si          #+#    #+#             */
-/*   Updated: 2025/04/09 13:59:52 by gyong-si         ###   ########.fr       */
+/*   Updated: 2025/05/20 22:39:41 by gyong-si         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -233,6 +233,46 @@ void PmergeMeVector::insertWithJacobsthal(std::vector<unsigned int> &mainSq, std
 	}
 }
 
+std::vector<size_t> PmergeMeVector::getJacobsthalIndices(std::vector<unsigned int> &pendSq)
+{
+	std::vector<size_t> jacobsthal_indices;
+	std::set<size_t>	all_indices;
+	int					k = 1;
+
+	while (Jacobsthal(++k) < pendSq.size())
+	{
+		jacobsthal_indices.push_back(Jacobsthal(k));
+	}
+	for (size_t i = 0; i < pendSq.size(); ++i)
+		all_indices.insert(i);
+	for (size_t i = 0; i < jacobsthal_indices.size(); ++i)
+	{
+		all_indices.erase(jacobsthal_indices[i]);
+	}
+	jacobsthal_indices.insert(jacobsthal_indices.end(), all_indices.begin(), all_indices.end());
+	/** *
+	std::cout << "Printing Jacobsthal Number" << std::endl;
+	for (size_t i = 0; i < jacobsthal_indices.size(); ++i)
+		std::cout << jacobsthal_indices[i] << " ";
+	std::cout << std::endl;
+	**/
+	return (jacobsthal_indices);
+}
+
+
+void PmergeMeVector::jacobsthalInsert(std::vector<unsigned int> &mainSq, std::vector<unsigned int> &pendSq)
+{
+	std::vector<size_t> jacobsthal_indices = getJacobsthalIndices(pendSq);
+
+	for (size_t i = 0; i < jacobsthal_indices.size(); ++i)
+	{
+		unsigned int idx = jacobsthal_indices[i];
+		size_t pos = binarySearchPos(mainSq, pendSq[idx]);
+		mainSq.insert(mainSq.begin() + pos, pendSq[idx]);
+	}
+}
+
+
 void	PmergeMeVector::fordJohnsonSort(std::vector<unsigned int> &v)
 {
 	std::vector<unsigned int>	mainSq;
@@ -251,6 +291,7 @@ void	PmergeMeVector::fordJohnsonSort(std::vector<unsigned int> &v)
 	/** *
 	std::cout << "After getSortedPairs" << std::endl;
 	printPairs();
+
 	std::cout << "After mergeSortPairs" << std::endl;
 	**/
 	mergeSortPairs(0, p.size() -1);
@@ -276,8 +317,8 @@ void	PmergeMeVector::fordJohnsonSort(std::vector<unsigned int> &v)
 	}
 	std::cout << std::endl;
 	**/
-	insertWithJacobsthal(mainSq, pendSq);
-
+	//insertWithJacobsthal(mainSq, pendSq);
+	jacobsthalInsert(mainSq, pendSq);
 	if (hasOdd)
 	{
 		size_t pos = binarySearchPos(mainSq, oddEle);

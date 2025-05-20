@@ -6,7 +6,7 @@
 /*   By: gyong-si <gyong-si@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 14:25:02 by gyong-si          #+#    #+#             */
-/*   Updated: 2025/04/09 13:49:51 by gyong-si         ###   ########.fr       */
+/*   Updated: 2025/05/20 22:15:27 by gyong-si         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@ class PmergeMeVector
 		void	mergeSortPairs(int left, int right);
 		void	mergeVectorPairs(int left, int mid, int right);
 		void	insertWithJacobsthal(std::vector<unsigned int> &mainSq, std::vector<unsigned int> &pendSq);
+		std::vector<size_t> getJacobsthalIndices(std::vector<unsigned int> &pendSq);
+		void	jacobsthalInsert(std::vector<unsigned int> &mainSq, std::vector<unsigned int> &pendSq);
 
 };
 
