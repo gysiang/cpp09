@@ -6,7 +6,7 @@
 /*   By: gyong-si <gyong-si@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 14:43:04 by gyong-si          #+#    #+#             */
-/*   Updated: 2025/05/20 22:38:42 by gyong-si         ###   ########.fr       */
+/*   Updated: 2025/05/21 10:51:47 by gyong-si         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,40 +187,42 @@ void	PmergeMeDeque::getSortedPairs()
 	}
 }
 
-void insertWithJacobsthal(std::deque<unsigned int> &mainSq, std::deque<unsigned int> &pendSq)
+std::deque<size_t> PmergeMeDeque::getJacobsthalIndices(std::deque<unsigned int> &pendSq)
 {
-	size_t k = 2;
-	size_t lastInsertPos = 0;
-	while (pendSq.size() != 0)
+	std::deque<size_t> jacobsthal_indices;
+	std::set<size_t>	all_indices;
+	int					k = 1;
+
+	while (Jacobsthal(++k) < pendSq.size())
 	{
-		size_t batchSize = Jacobsthal(k) - Jacobsthal(k-1);
-		batchSize = std::min(batchSize, pendSq.size());
-		//std::cout << "batchSize: " << batchSize << std::endl;
+		jacobsthal_indices.push_back(Jacobsthal(k));
+	}
+	for (size_t i = 0; i < pendSq.size(); ++i)
+		all_indices.insert(i);
+	for (size_t i = 0; i < jacobsthal_indices.size(); ++i)
+	{
+		all_indices.erase(jacobsthal_indices[i]);
+	}
+	jacobsthal_indices.insert(jacobsthal_indices.end(), all_indices.begin(), all_indices.end());
+	/** *
+	std::cout << "Printing Jacobsthal Number" << std::endl;
+	for (size_t i = 0; i < jacobsthal_indices.size(); ++i)
+		std::cout << jacobsthal_indices[i] << " ";
+	std::cout << std::endl;
+	**/
+	return (jacobsthal_indices);
+}
 
-		size_t pivotPos = pendSq.size() / 2;
-		size_t startPos = (pivotPos >= batchSize / 2) ? pivotPos - batchSize / 2 : 0;
-		startPos = std::min(startPos, pendSq.size() - batchSize);
 
-		for (size_t i = 0; i < batchSize; ++i)
-		{
-			if (pendSq.empty())
-				break;
+void PmergeMeDeque::jacobsthalInsert(std::deque<unsigned int> &mainSq, std::deque<unsigned int> &pendSq)
+{
+	std::deque<size_t> jacobsthal_indices = getJacobsthalIndices(pendSq);
 
-			size_t left = 0;
-			size_t right = mainSq.size();
-			unsigned int num = pendSq[startPos + i];
-
-			if (lastInsertPos > 0 && num > mainSq[lastInsertPos - 1])
-				left = lastInsertPos;
-			else if (!mainSq.empty() && num < mainSq[0])
-				right = 1;
-
-			size_t pos = binarySearchPosRange(mainSq, num, left, right);
-			//std::cout << "Inserting " << num << " at position " << pos << std::endl;
-			mainSq.insert(mainSq.begin() + pos, num);
-		}
-		pendSq.erase(pendSq.begin() + startPos, pendSq.begin() + startPos + batchSize);
-		k++;
+	for (size_t i = 0; i < jacobsthal_indices.size(); ++i)
+	{
+		unsigned int idx = jacobsthal_indices[i];
+		size_t pos = binarySearchPos(mainSq, pendSq[idx]);
+		mainSq.insert(mainSq.begin() + pos, pendSq[idx]);
 	}
 }
 
@@ -247,15 +249,18 @@ void	PmergeMeDeque::fordJohnsonSort(std::deque<unsigned int> &v)
 	oddEle = hasOdd ? v.back() : 0;
 	if (hasOdd)
 		v.pop_back();
+
 	getSortedPairs();
 	mergeSortPairs(0, p.size() -1);
-	//printPairs();
+
 	for (std::deque<std::pair<unsigned int, unsigned int> >::iterator it = p.begin(); it != p.end(); it++)
 	{
 		mainSq.push_back(it->first);
 		pendSq.push_back(it->second);
 	}
-	insertWithJacobsthal(mainSq, pendSq);
+
+	jacobsthalInsert(mainSq, pendSq);
+
 	// using normal binary insertion, insert the odd number into the main seq
 	if (hasOdd)
 	{

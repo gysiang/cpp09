@@ -6,7 +6,7 @@
 /*   By: gyong-si <gyong-si@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 14:38:57 by gyong-si          #+#    #+#             */
-/*   Updated: 2025/05/21 00:00:14 by gyong-si         ###   ########.fr       */
+/*   Updated: 2025/05/21 11:23:35 by gyong-si         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,7 +124,6 @@ void PmergeMeVector::mergeSortPairs(int left, int right)
 		int mid = left + (right - left) / 2;
 		mergeSortPairs(left, mid);
 		mergeSortPairs(mid+1, right);
-		//mergeVectorPairs(left, mid, right);
 		std::inplace_merge(p.begin() + left, p.begin() + mid + 1, p.begin() + right + 1);
 	}
 }
@@ -196,42 +195,6 @@ void PmergeMeVector::printPairs() const
     std::cout << std::endl;
 }
 
-void PmergeMeVector::insertWithJacobsthal(std::vector<unsigned int> &mainSq, std::vector<unsigned int> &pendSq)
-{
-	size_t k = 2;
-	size_t lastInsertPos = 0;
-	while (pendSq.size() != 0)
-	{
-		size_t batchSize = Jacobsthal(k) - Jacobsthal(k-1);
-		batchSize = std::min(batchSize, pendSq.size());
-		//std::cout << "batchSize: " << batchSize << std::endl;
-
-		size_t pivotPos = pendSq.size() / 2;
-		size_t startPos = (pivotPos >= batchSize / 2) ? pivotPos - batchSize / 2 : 0;
-		startPos = std::min(startPos, pendSq.size() - batchSize);
-
-		for (size_t i = 0; i < batchSize; ++i)
-		{
-			if (pendSq.empty())
-				break;
-
-			size_t left = 0;
-			size_t right = mainSq.size();
-			unsigned int num = pendSq[startPos + i];
-
-			if (lastInsertPos > 0 && num > mainSq[lastInsertPos - 1])
-				left = lastInsertPos;
-			else if (!mainSq.empty() && num < mainSq[0])
-				right = 1;
-
-			size_t pos = binarySearchPosRange(mainSq, num, left, right);
-			//std::cout << "Inserting " << num << " at position " << pos << std::endl;
-			mainSq.insert(mainSq.begin() + pos, num);
-		}
-		pendSq.erase(pendSq.begin() + startPos, pendSq.begin() + startPos + batchSize);
-		k++;
-	}
-}
 
 std::vector<size_t> PmergeMeVector::getJacobsthalIndices(std::vector<unsigned int> &pendSq)
 {

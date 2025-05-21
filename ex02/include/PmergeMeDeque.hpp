@@ -6,7 +6,7 @@
 /*   By: gyong-si <gyong-si@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 14:37:22 by gyong-si          #+#    #+#             */
-/*   Updated: 2025/04/09 13:48:11 by gyong-si         ###   ########.fr       */
+/*   Updated: 2025/05/21 10:50:09 by gyong-si         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,8 @@ class PmergeMeDeque
 		void	getSortedPairs();
 		void	mergeVectorPairs(int left, int mid, int right);
 		void 	mergeSortPairs(int left, int right);
-
+		std::deque<size_t> getJacobsthalIndices(std::deque<unsigned int> &pendSq);
+		void	jacobsthalInsert(std::deque<unsigned int> &mainSq, std::deque<unsigned int> &pendSq);
 
 };
 
