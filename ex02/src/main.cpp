@@ -6,7 +6,7 @@
 /*   By: gyong-si <gyong-si@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 09:20:17 by gyong-si          #+#    #+#             */
-/*   Updated: 2025/04/09 14:00:27 by gyong-si         ###   ########.fr       */
+/*   Updated: 2025/06/13 19:45:01 by gyong-si         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,10 @@ int main(int ac, char **av)
 		std::cout << std::fixed << std::setprecision(6);
 		std::cout << "Time to process a range of " << a.size()
 		<< " elements with std::vector: " << vec_time << " us" << std::endl;
+
 		std::cout << "Time to process a range of " << b.size()
 		<< " elements with std::deque: " << deq_time << " us" << std::endl;
+
 	}
 	return (0);
 }
